@@ -1,30 +1,100 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:controle_estoque/main.dart';
+import 'package:controle_estoque/services/movimentacao_servico.dart';
+import 'package:controle_estoque/services/produto_servico.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Regras de movimentação', () {
+    final servico = MovimentacaoServico();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('aceita entrada com quantidade válida', () {
+      final erro = servico.validar(
+        tipo: 'ENTRADA',
+        quantidade: '10',
+        saldoAtual: 8,
+      );
+      expect(erro, isNull);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('bloqueia saída maior que o saldo', () {
+      final erro = servico.validar(
+        tipo: 'SAÍDA',
+        quantidade: '9',
+        saldoAtual: 8,
+      );
+      expect(erro, contains('Saída maior'));
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('aceita saída igual ao saldo', () {
+      final erro = servico.validar(
+        tipo: 'SAÍDA',
+        quantidade: '8',
+        saldoAtual: 8,
+      );
+      expect(erro, isNull);
+    });
+
+    test('bloqueia quantidade zero', () {
+      final erro = servico.validar(
+        tipo: 'ENTRADA',
+        quantidade: '0',
+        saldoAtual: 8,
+      );
+      expect(erro, isNotNull);
+    });
+
+    test('bloqueia quantidade que não é número', () {
+      final erro = servico.validar(
+        tipo: 'ENTRADA',
+        quantidade: 'abc',
+        saldoAtual: 8,
+      );
+      expect(erro, isNotNull);
+    });
+
+    test('bloqueia tipo de movimentação inválido', () {
+      final erro = servico.validar(
+        tipo: 'OUTRO',
+        quantidade: '5',
+        saldoAtual: 8,
+      );
+      expect(erro, isNotNull);
+    });
+  });
+
+  group('Regras de cadastro de produto', () {
+    final servico = ProdutoServico();
+
+    test('aceita cadastro com dados válidos', () {
+      final erro = servico.validar(
+        nome: 'Tomate',
+        categoria: 'Hortifruti',
+        unidadeMedida: 'kg',
+        quantidadeInicial: '8',
+        estoqueMinimo: '10',
+      );
+      expect(erro, isNull);
+    });
+
+    test('bloqueia nome vazio', () {
+      final erro = servico.validar(
+        nome: '   ',
+        categoria: 'Hortifruti',
+        unidadeMedida: 'kg',
+        quantidadeInicial: '8',
+        estoqueMinimo: '10',
+      );
+      expect(erro, isNotNull);
+    });
+
+    test('bloqueia quantidade inicial negativa', () {
+      final erro = servico.validar(
+        nome: 'Tomate',
+        categoria: 'Hortifruti',
+        unidadeMedida: 'kg',
+        quantidadeInicial: '-1',
+        estoqueMinimo: '10',
+      );
+      expect(erro, isNotNull);
+    });
   });
 }
