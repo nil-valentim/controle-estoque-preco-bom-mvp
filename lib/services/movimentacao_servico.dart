@@ -58,4 +58,8 @@ class MovimentacaoServico {
     );
     return null;
   }
+
+  Future<List<Movimentacao>> listarHistorico(int idProduto) {
+    return _repositorio.listarPorProduto(idProduto);
+  }
 }

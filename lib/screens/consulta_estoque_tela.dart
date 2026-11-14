@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/produto.dart';
 import '../providers/produto_provider.dart';
+import 'historico_tela.dart';
 
 class ConsultaEstoqueTela extends StatefulWidget {
   const ConsultaEstoqueTela({super.key});
@@ -72,9 +73,20 @@ class _ConsultaEstoqueTelaState extends State<ConsultaEstoqueTela> {
                   color: cor,
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  baixo ? 'Estoque baixo' : 'Estoque normal',
-                  style: TextStyle(color: cor, fontWeight: FontWeight.w500),
+                Expanded(
+                  child: Text(
+                    baixo ? 'Estoque baixo' : 'Estoque normal',
+                    style: TextStyle(color: cor, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HistoricoTela(produto: p),
+                    ),
+                  ),
+                  child: const Text('Ver histórico'),
                 ),
               ],
             ),

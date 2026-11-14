@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/movimentacao.dart';
 import '../services/movimentacao_servico.dart';
 
 class MovimentacaoProvider extends ChangeNotifier {
@@ -20,5 +21,9 @@ class MovimentacaoProvider extends ChangeNotifier {
       quantidade: quantidade,
       observacao: observacao,
     );
+  }
+
+  Future<List<Movimentacao>> historico(int idProduto) {
+    return _servico.listarHistorico(idProduto);
   }
 }

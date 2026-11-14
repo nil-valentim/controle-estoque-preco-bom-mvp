@@ -26,4 +26,15 @@ class MovimentacaoRepositorio {
       );
     });
   }
+
+  Future<List<Movimentacao>> listarPorProduto(int idProduto) async {
+    final db = await BancoDados.instancia.banco;
+    final linhas = await db.query(
+      'movimentacao_estoque',
+      where: 'id_produto = ?',
+      whereArgs: [idProduto],
+      orderBy: 'data_movimentacao DESC',
+    );
+    return linhas.map(Movimentacao.fromMap).toList();
+  }
 }
