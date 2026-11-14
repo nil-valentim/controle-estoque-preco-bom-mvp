@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'cadastro_produto_tela.dart';
+import 'consulta_estoque_tela.dart';
 import 'movimentar_estoque_tela.dart';
 
 class MenuTela extends StatelessWidget {
@@ -44,6 +45,8 @@ class MenuTela extends StatelessWidget {
                   const CadastroProdutoTela()),
               _botao(context, 'Movimentar estoque', Icons.swap_horiz,
                   const MovimentarEstoqueTela()),
+              _botao(context, 'Consultar estoque', Icons.list_alt,
+                  const ConsultaEstoqueTela()),
             ],
           ),
         ),
