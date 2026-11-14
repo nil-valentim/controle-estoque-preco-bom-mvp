@@ -31,3 +31,9 @@ jobs:
 
       - name: Build do APK
         run: flutter build apk --debug
+
+      - name: Guardar o APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-estoque-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
